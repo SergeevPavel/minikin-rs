@@ -1,5 +1,5 @@
 [package]
-name = "minikin-rs"
+name = "minikin"
 version = "0.1.0"
 authors = ["Pavel Sergeev <pavel.sergeev@jetbrains.com>"]
 edition = "2018"

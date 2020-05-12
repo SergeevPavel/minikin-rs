@@ -19,8 +19,8 @@ std::shared_ptr<FontFamily> getFontFamily(std::string path) {
 
 std::vector<std::shared_ptr<FontFamily>> getFontFamilies() {
   std::vector<std::shared_ptr<FontFamily>> families;
-//  families.push_back(getFontFamily("../../fonts/Roboto-Regular.ttf"));
-//  families.push_back(getFontFamily("../../fonts/OpenSansEmoji.ttf"));
+  families.push_back(getFontFamily("/System/Library/Fonts/Supplemental/Verdana.ttf"));
+  families.push_back(getFontFamily("/System/Library/Fonts/Apple Color Emoji.ttc"));
   return families;
 }
 
