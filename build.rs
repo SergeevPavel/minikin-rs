@@ -6,7 +6,7 @@ use std::process::Command;
 
 fn main() {
     let out_dir = PathBuf::from(env::var_os("OUT_DIR").unwrap());
-    assert!(Command::new("./build-third-party.sh").arg(out_dir.display().to_string()).status().unwrap().success());
+    assert!(Command::new("./minikin/build-third-party.sh").arg(out_dir.display().to_string()).status().unwrap().success());
     println!("cargo:rustc-link-search=native={}",
              out_dir
                  .join("packages")

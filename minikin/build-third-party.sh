@@ -10,7 +10,7 @@ mkdir -p $PACKAGES_ROOT
 CARGO_TARGET=$TARGET
 export TARGET="" # workaround because of this var is misleading for make install
 echo "Building icu..."
-cd $ROOT/minikin/third-party/icu/icu4c/source
+cd $ROOT/third-party/icu/icu4c/source
 ./configure --prefix=$PACKAGES_ROOT \
             --enable-static=yes \
             --enable-shared=no
@@ -18,12 +18,13 @@ make install  -j $NUM_JOBS
 export TARGET=CARGO_TARGET
 
 echo "Building harfbuzz..."
-cd $ROOT/minikin/third-party/harfbuzz
+cd $ROOT/third-party/harfbuzz
 export PKG_CONFIG_PATH="$PACKAGES_ROOT/lib/pkgconfig/"
 ./autogen.sh
 ./configure --prefix=$PACKAGES_ROOT \
             --with-icu=yes \
             --enable-static=yes \
             --enable-shared=no \
-            --with-libstdc++=yes
+            --without-freetype \
+            --without-glib
 make install -j $NUM_JOBS

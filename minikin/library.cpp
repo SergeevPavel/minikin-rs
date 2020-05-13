@@ -6,7 +6,6 @@
 
 using namespace minikin;
 
-
 std::shared_ptr<FontFamily> getFontFamily(std::string path) {
   std::vector<Font> fonts;
   auto minikinFont = std::make_shared<MinikinFontForTest>(path);
