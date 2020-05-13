@@ -6,10 +6,16 @@ use std::process::Command;
 
 fn main() {
     let out_dir = PathBuf::from(env::var_os("OUT_DIR").unwrap());
-    assert!(Command::new("./minikin/build-third-party.sh").arg(out_dir.display().to_string()).status().unwrap().success());
+    // assert!(Command::new("./minikin/build-third-party.sh").arg(out_dir.display().to_string()).status().unwrap().success());
+
+    assert!(Command::new("make")
+        .args(&["-f", "makefile.cargo", "-j", &env::var("NUM_JOBS").unwrap()])
+        .status()
+        .unwrap()
+        .success());
+
     println!("cargo:rustc-link-search=native={}",
              out_dir
-                 .join("packages")
                  .join("lib")
                  .display());
     println!("cargo:rustc-link-lib=static=harfbuzz");
