@@ -3,47 +3,47 @@ extern crate libc;
 #[repr(C)]
 #[derive(Debug)]
 pub struct GlyphDimensions {
-    left: i32,
-    top: i32,
-    width: i32,
-    height: i32,
-    advance: i32
+    pub left: i32,
+    pub top: i32,
+    pub width: i32,
+    pub height: i32,
+    pub advance: i32
 }
 
 #[repr(C)]
 #[derive(Debug)]
 pub struct MinikinRect {
-    left: f32,
-    top: f32,
-    right: f32,
-    bottom: f32
+    pub left: f32,
+    pub top: f32,
+    pub right: f32,
+    pub bottom: f32
 }
 
-type MinikinFontToken = u64;
-type MinikinFontId = u64;
+pub type MinikinFontToken = u64;
+pub type MinikinFontId = u64;
 
-type FontCollectionToken = u64;
+pub type FontCollectionToken = u64;
 
-type LayoutToken = u64;
+pub type LayoutToken = u64;
 
 pub type MeasureGlyph = unsafe extern "C" fn(MinikinFontId, f32, u32) -> GlyphDimensions;
 
 extern {
-    fn create_font(bytes: *const u8, size: u32, measure_glyph: MeasureGlyph) -> MinikinFontToken;
-    fn destroy_font(font: MinikinFontToken);
-    fn get_font_id(font: MinikinFontToken) -> MinikinFontId;
+    pub fn create_font(bytes: *const u8, size: u32, measure_glyph: MeasureGlyph) -> MinikinFontToken;
+    pub fn destroy_font(font: MinikinFontToken);
+    pub fn get_font_id(font: MinikinFontToken) -> MinikinFontId;
 
-    fn create_font_collection(fonts: *const MinikinFontToken, count: u32) -> FontCollectionToken;
-    fn destroy_font_collection(font_collection: FontCollectionToken);
+    pub fn create_font_collection(fonts: *const MinikinFontToken, count: u32) -> FontCollectionToken;
+    pub fn destroy_font_collection(font_collection: FontCollectionToken);
 
-    fn layout_text(text: *const u8, text_length: u32, is_rtl: bool, font_size: f32, font_collection: FontCollectionToken) -> LayoutToken;
-    fn destroy_layout(layout: LayoutToken);
-    fn get_bounds(layout: LayoutToken) -> MinikinRect;
-    fn glyphs_count(layout: LayoutToken) -> usize;
-    fn get_font(layout: LayoutToken, i: usize) -> MinikinFontId;
-    fn get_glyph_id(layout: LayoutToken, i: usize) -> u32;
-    fn get_x(layout: LayoutToken, i: usize) -> f32;
-    fn get_y(layout: LayoutToken, i: usize) -> f32;
+    pub fn layout_text(text: *const u8, text_length: u32, is_rtl: bool, font_size: f32, font_collection: FontCollectionToken) -> LayoutToken;
+    pub fn destroy_layout(layout: LayoutToken);
+    pub fn get_bounds(layout: LayoutToken) -> MinikinRect;
+    pub fn glyphs_count(layout: LayoutToken) -> usize;
+    pub fn get_font(layout: LayoutToken, i: usize) -> MinikinFontId;
+    pub fn get_glyph_id(layout: LayoutToken, i: usize) -> u32;
+    pub fn get_x(layout: LayoutToken, i: usize) -> f32;
+    pub fn get_y(layout: LayoutToken, i: usize) -> f32;
 }
 
 #[cfg(test)]
