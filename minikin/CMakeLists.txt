@@ -11,9 +11,8 @@ link_directories("packages/lib")
 FILE(GLOB minikin src/minikin/*.cpp)
 FILE(GLOB log src/log/*.cc)
 FILE(GLOB utils src/utils/*.cpp)
-FILE(GLOB bindings src/bindings/*.cpp)
 
-add_library(minikin STATIC library.cpp library.h ${minikin} ${log} ${utils} ${bindings})
+add_library(minikin STATIC library.cpp library.h ${minikin} ${log} ${utils})
 
 add_executable(app main.cpp)
 target_link_libraries(app minikin)

@@ -6,6 +6,7 @@
   <component name="CidrRootsConfiguration">
     <excludeRoots>
       <file path="$PROJECT_DIR$/fonts" />
+      <file path="$PROJECT_DIR$/minikin/packages" />
       <file path="$PROJECT_DIR$/target" />
     </excludeRoots>
   </component>
