@@ -1,6 +1,6 @@
 [submodule "minikin/third-party/harfbuzz"]
 	path = minikin/third-party/harfbuzz
-	url = git@github.com:harfbuzz/harfbuzz.git
+	url = https://github.com/harfbuzz/harfbuzz.git
 [submodule "minikin/third-party/icu"]
 	path = minikin/third-party/icu
-	url = git@github.com:unicode-org/icu.git
+	url = https://github.com/unicode-org/icu.git
