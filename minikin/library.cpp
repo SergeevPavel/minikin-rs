@@ -5,14 +5,13 @@
 
 using namespace minikin;
 
-static int32_t uniqueId = 0;
-
 class ProxyMinikinFont : public MinikinFont {
 public:
-    ProxyMinikinFont(const uint8_t* bytes, uint32_t size, measure_glyph_t measureGlyph)
-    : MinikinFont(uniqueId++)
+    ProxyMinikinFont(uint32_t fontId, const uint8_t* bytes, uint32_t size, measure_glyph_t measureGlyph, void* measureGlyphArg)
+    : MinikinFont(fontId)
     , mFontIndex(0)
-    , measureGlyph(measureGlyph)
+    , mMeasureGlyph(measureGlyph)
+    , mMeasureGlyphArg(measureGlyphArg)
     , mVariations() {
         mHbBlob = hb_blob_create((const char*)bytes, size, HB_MEMORY_MODE_READONLY, nullptr, nullptr);
         mHbFace = hb_face_create(mHbBlob, mFontIndex);
@@ -25,13 +24,13 @@ public:
 
     float GetHorizontalAdvance(uint32_t glyph_id,
                                const MinikinPaint& paint) const override {
-        return measureGlyph(this, paint.size, glyph_id).advance;
+        return mMeasureGlyph(paint.size, glyph_id, this->mMeasureGlyphArg).advance;
     }
 
     void GetBounds(MinikinRect* bounds,
                    uint32_t glyph_id,
                    const MinikinPaint& paint) const override {
-        auto metrics = measureGlyph(this, paint.size, glyph_id);
+        auto metrics = mMeasureGlyph(paint.size, glyph_id, this->mMeasureGlyphArg);
         bounds->mTop = metrics.top;
         bounds->mLeft = metrics.left;
         bounds->mRight = metrics.left + metrics.width;
@@ -55,19 +54,16 @@ private:
     const int mFontIndex;
     hb_blob_t* mHbBlob;
     hb_face_t* mHbFace;
-    measure_glyph_t measureGlyph;
+    measure_glyph_t mMeasureGlyph;
+    void* mMeasureGlyphArg;
 };
 
-MinikinFontToken create_font(const uint8_t *bytes, uint32_t size, measure_glyph_t measureGlyph) {
-    return new std::shared_ptr<MinikinFont>(new ProxyMinikinFont(bytes, size, measureGlyph));
+MinikinFontToken create_font(uint32_t fontId, const uint8_t *bytes, uint32_t size, measure_glyph_t measureGlyph, void* arg) {
+    return new std::shared_ptr<MinikinFont>(new ProxyMinikinFont(fontId, bytes, size, measureGlyph, arg));
 }
 
 void destroy_font(MinikinFontToken font) {
     delete font;
-}
-
-MinikinFont* get_font_id(MinikinFontToken font) {
-    return font->get();
 }
 
 FontCollectionToken create_font_collection(MinikinFontToken fonts[], uint32_t count) {
@@ -119,8 +115,8 @@ size_t glyphs_count(const Layout* layout) {
     return layout->nGlyphs();
 }
 
-const MinikinFont* get_font(const Layout* layout, size_t i) {
-    return layout->getFont(i);
+uint32_t get_font_id(const Layout* layout, size_t i) {
+    return layout->getFont(i)->GetUniqueId();
 }
 
 uint32_t get_glyph_id(const Layout* layout, size_t i) {
@@ -133,4 +129,8 @@ float_t get_x(const Layout* layout, size_t i) {
 
 float_t get_y(const Layout* layout, size_t i) {
     return layout->getY(i);
+}
+
+int32_t get_cluster(const Layout* layout, size_t i) {
+    return layout->getGlyphCluster(i);
 }

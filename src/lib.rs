@@ -1,5 +1,7 @@
 extern crate libc;
 
+use libc::{c_int, c_void};
+
 #[repr(C)]
 #[derive(Debug)]
 pub struct GlyphDimensions {
@@ -20,18 +22,15 @@ pub struct MinikinRect {
 }
 
 pub type MinikinFontToken = u64;
-pub type MinikinFontId = u64;
-
 pub type FontCollectionToken = u64;
 
 pub type LayoutToken = u64;
 
-pub type MeasureGlyph = unsafe extern "C" fn(MinikinFontId, f32, u32) -> GlyphDimensions;
+pub type MeasureGlyph = unsafe extern "C" fn(f32, u32, *mut c_void) -> GlyphDimensions;
 
 extern {
-    pub fn create_font(bytes: *const u8, size: u32, measure_glyph: MeasureGlyph) -> MinikinFontToken;
+    pub fn create_font(font_id: u32, bytes: *const u8, size: u32, measure_glyph: MeasureGlyph, arg: *mut c_void) -> MinikinFontToken;
     pub fn destroy_font(font: MinikinFontToken);
-    pub fn get_font_id(font: MinikinFontToken) -> MinikinFontId;
 
     pub fn create_font_collection(fonts: *const MinikinFontToken, count: u32) -> FontCollectionToken;
     pub fn destroy_font_collection(font_collection: FontCollectionToken);
@@ -40,10 +39,11 @@ extern {
     pub fn destroy_layout(layout: LayoutToken);
     pub fn get_bounds(layout: LayoutToken) -> MinikinRect;
     pub fn glyphs_count(layout: LayoutToken) -> usize;
-    pub fn get_font(layout: LayoutToken, i: usize) -> MinikinFontId;
+    pub fn get_font_id(layout: LayoutToken, i: usize) -> u32;
     pub fn get_glyph_id(layout: LayoutToken, i: usize) -> u32;
     pub fn get_x(layout: LayoutToken, i: usize) -> f32;
     pub fn get_y(layout: LayoutToken, i: usize) -> f32;
+    pub fn get_cluster(layout: LayoutToken, i: usize) -> i32;
 }
 
 #[cfg(test)]
@@ -55,7 +55,7 @@ mod tests {
     use std::fs::File;
     use std::path::PathBuf;
 
-    extern "C" fn measure_glyph(font_id: MinikinFontId, font_size: f32, glyph_id: u32) -> GlyphDimensions {
+    extern "C" fn measure_glyph(font_size: f32, glyph_id: u32, arg: *mut c_void) -> GlyphDimensions {
         GlyphDimensions {
             left: 0,
             top: 0,
@@ -75,13 +75,11 @@ mod tests {
         font_file1.read_to_end(&mut font_buffer1).unwrap();
         font_file2.read_to_end(&mut font_buffer2).unwrap();
         unsafe {
-            let font1 = create_font(font_buffer1.as_ptr(), font_buffer1.len() as u32, measure_glyph);
-            let font2 = create_font(font_buffer2.as_ptr(), font_buffer2.len() as u32, measure_glyph);
+            let font1 = create_font(1, font_buffer1.as_ptr(), font_buffer1.len() as u32, measure_glyph, 1 as *mut c_void);
+            let font2 = create_font(2, font_buffer2.as_ptr(), font_buffer2.len() as u32, measure_glyph, 1 as *mut c_void);
             let fonts = vec![font1, font2];
             let font_collection = create_font_collection(fonts.as_ptr(), fonts.len() as u32);
 
-            println!("Roboto font id: {}", get_font_id(font1));
-            println!("Emoji font id: {}", get_font_id(font2));
             let text = "Hello 😀 😀 😀 world Хеллоу ворлд";
             let text_bytes = text.as_bytes();
             let layout = layout_text(text_bytes.as_ptr(),
@@ -94,9 +92,10 @@ mod tests {
             println!("Glyphs count: {}", glyphs_count(layout));
 
             for i in 0..glyphs_count(layout) {
-                println!("Glyph id: {} Font id: {}, x: {} y: {}",
+                println!("Glyph id: {} Font id: {}, Cluster id: {} x: {} y: {}",
                          get_glyph_id(layout, i),
-                         get_font(layout, i),
+                         get_font_id(layout, i),
+                         get_cluster(layout, i),
                          get_x(layout, i),
                          get_y(layout, i));
             }
