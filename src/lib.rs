@@ -1,5 +1,3 @@
-extern crate libc;
-
 use libc::{c_int, c_void};
 
 #[repr(C)]
@@ -50,10 +48,10 @@ extern {
 mod tests {
     use crate::*;
 
-    use std::io;
     use std::io::prelude::*;
     use std::fs::File;
     use std::path::PathBuf;
+
 
     extern "C" fn measure_glyph(font_size: f32, glyph_id: u32, arg: *mut c_void) -> GlyphDimensions {
         GlyphDimensions {
@@ -67,7 +65,7 @@ mod tests {
 
     #[test]
     fn it_works() {
-        let mut root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+        let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
         let mut font_file1 = File::open(root.join("fonts/Roboto-Regular.ttf")).unwrap();
         let mut font_buffer1 = Vec::new();
         let mut font_file2 = File::open(root.join("fonts/OpenSansEmoji.ttf")).unwrap();
