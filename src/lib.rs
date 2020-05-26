@@ -36,6 +36,7 @@ extern {
     pub fn layout_text(text: *const u8, text_length: u32, is_rtl: bool, font_size: f32, font_collection: FontCollectionToken) -> LayoutToken;
     pub fn destroy_layout(layout: LayoutToken);
     pub fn get_bounds(layout: LayoutToken) -> MinikinRect;
+    pub fn get_advance(layout: LayoutToken) -> f32;
     pub fn glyphs_count(layout: LayoutToken) -> usize;
     pub fn get_font_id(layout: LayoutToken, i: usize) -> u32;
     pub fn get_glyph_id(layout: LayoutToken, i: usize) -> u32;

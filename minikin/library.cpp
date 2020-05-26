@@ -111,6 +111,10 @@ MinikinRect get_bounds(const Layout* layout) {
     return bounds;
 }
 
+float_t get_advance(const Layout* layout) {
+    return layout->getAdvance();
+}
+
 size_t glyphs_count(const Layout* layout) {
     return layout->nGlyphs();
 }

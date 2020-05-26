@@ -43,6 +43,7 @@ extern "C" Layout* layout_text(const uint8_t* text,
 extern "C" void destroy_layout(Layout* layout);
 
 extern "C" MinikinRect get_bounds(const Layout* layout);
+extern "C" float_t get_advance(const Layout* layout);
 extern "C" size_t glyphs_count(const Layout* layout);
 extern "C" uint32_t get_font_id(const Layout* layout, size_t i);
 extern "C" uint32_t get_glyph_id(const Layout* layout, size_t i);
