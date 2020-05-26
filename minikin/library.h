@@ -14,7 +14,7 @@ struct GlyphDimensions {
     int32_t top;
     int32_t width;
     int32_t height;
-    int32_t advance;
+    float_t advance;
 };
 
 typedef const std::shared_ptr<MinikinFont>* MinikinFontToken;

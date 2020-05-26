@@ -7,7 +7,7 @@ pub struct GlyphDimensions {
     pub top: i32,
     pub width: i32,
     pub height: i32,
-    pub advance: i32
+    pub advance: f32
 }
 
 #[repr(C)]
@@ -59,7 +59,7 @@ mod tests {
             top: 0,
             width: 10,
             height: 10,
-            advance: 10
+            advance: 10.
         }
     }
 
