@@ -90,6 +90,7 @@ fn main() {
     {
         cc::Build::new()
             .cpp(true)
+            .flag("-std=c++11")
             .static_crt(static_crt)
             .define("HAVE_ICU", None)
             .define("HAVE_ICU_BUILTIN", None)
