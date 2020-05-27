@@ -7,12 +7,12 @@ using namespace minikin;
 
 class ProxyMinikinFont : public MinikinFont {
 public:
-    ProxyMinikinFont(uint32_t fontId, const uint8_t* bytes, uint32_t size, measure_glyph_t measureGlyph, void* measureGlyphArg)
+    ProxyMinikinFont(uint32_t fontId, const uint8_t* bytes, uint32_t size, std::vector<FontVariation> variations, measure_glyph_t measureGlyph, void* measureGlyphArg)
     : MinikinFont(fontId)
     , mFontIndex(0)
     , mMeasureGlyph(measureGlyph)
     , mMeasureGlyphArg(measureGlyphArg)
-    , mVariations() {
+    , mVariations(variations) {
         mHbBlob = hb_blob_create((const char*)bytes, size, HB_MEMORY_MODE_READONLY, nullptr, nullptr);
         mHbFace = hb_face_create(mHbBlob, mFontIndex);
     }
@@ -58,8 +58,19 @@ private:
     void* mMeasureGlyphArg;
 };
 
-MinikinFontToken create_font(uint32_t fontId, const uint8_t *bytes, uint32_t size, measure_glyph_t measureGlyph, void* arg) {
-    return new std::shared_ptr<MinikinFont>(new ProxyMinikinFont(fontId, bytes, size, measureGlyph, arg));
+MinikinFontToken create_font(uint32_t fontId,
+        const uint8_t *bytes,
+        uint32_t size,
+        uint32_t variationsCount,
+        uint32_t* axisTags,
+        float_t* variationValues,
+        measure_glyph_t measureGlyph,
+        void* arg) {
+    std::vector<FontVariation> variations;
+    for (int i = 0; i < variationsCount; i++) {
+        variations.emplace_back(axisTags[i], variationValues[i]);
+    }
+    return new std::shared_ptr<MinikinFont>(new ProxyMinikinFont(fontId, bytes, size, variations, measureGlyph, arg));
 }
 
 void destroy_font(MinikinFontToken font) {

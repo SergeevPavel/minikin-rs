@@ -27,7 +27,14 @@ pub type LayoutToken = u64;
 pub type MeasureGlyph = unsafe extern "C" fn(f32, u32, *mut c_void) -> GlyphDimensions;
 
 extern {
-    pub fn create_font(font_id: u32, bytes: *const u8, size: u32, measure_glyph: MeasureGlyph, arg: *mut c_void) -> MinikinFontToken;
+    pub fn create_font(font_id: u32,
+                       bytes: *const u8,
+                       size: u32,
+                       variations_count: u32,
+                       axis_tags: *const u32,
+                       variation_values: *const f32,
+                       measure_glyph: MeasureGlyph,
+                       arg: *mut c_void) -> MinikinFontToken;
     pub fn destroy_font(font: MinikinFontToken);
 
     pub fn create_font_collection(fonts: *const MinikinFontToken, count: u32) -> FontCollectionToken;
@@ -74,8 +81,22 @@ mod tests {
         font_file1.read_to_end(&mut font_buffer1).unwrap();
         font_file2.read_to_end(&mut font_buffer2).unwrap();
         unsafe {
-            let font1 = create_font(1, font_buffer1.as_ptr(), font_buffer1.len() as u32, measure_glyph, 1 as *mut c_void);
-            let font2 = create_font(2, font_buffer2.as_ptr(), font_buffer2.len() as u32, measure_glyph, 1 as *mut c_void);
+            let font1 = create_font(1,
+                                    font_buffer1.as_ptr(),
+                                    font_buffer1.len() as u32,
+                                    0,
+                                    0 as *const u32,
+                                    0 as *const f32,
+                                    measure_glyph,
+                                    1 as *mut c_void);
+            let font2 = create_font(2,
+                                    font_buffer2.as_ptr(),
+                                    font_buffer2.len() as u32,
+                                    0,
+                                    0 as *const u32,
+                                    0 as *const f32,
+                                    measure_glyph,
+                                    2 as *mut c_void);
             let fonts = vec![font1, font2];
             let font_collection = create_font_collection(fonts.as_ptr(), fonts.len() as u32);
 

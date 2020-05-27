@@ -20,10 +20,17 @@ struct GlyphDimensions {
 typedef const std::shared_ptr<MinikinFont>* MinikinFontToken;
 typedef std::shared_ptr<FontCollection>* FontCollectionToken;
 
-// (font_id, font_size, flyph_id) -> glyph_dimensions
+// (font_size, glyph_id, arg) -> glyph_dimensions
 typedef GlyphDimensions (*measure_glyph_t)(float_t, uint32_t, void*);
 
-extern "C" MinikinFontToken create_font(uint32_t  fontId, const uint8_t* bytes, uint32_t size, measure_glyph_t measureGlyph, void* arg);
+extern "C" MinikinFontToken create_font(uint32_t  fontId,
+        const uint8_t* bytes,
+        uint32_t size,
+        uint32_t variationsCount,
+        uint32_t* axisTags,
+        float_t* variationValues,
+        measure_glyph_t measureGlyph,
+        void* arg);
 extern "C" void destroy_font(MinikinFontToken font);
 
 extern "C" FontCollectionToken create_font_collection(MinikinFontToken fonts[], uint32_t count);
