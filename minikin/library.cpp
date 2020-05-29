@@ -100,6 +100,7 @@ Layout* layout_text(const uint8_t* text,
     auto layout = new Layout();
     auto utf16Text = utf8ToUtf16(std::string((char*)text, textLength));
     auto paint = MinikinPaint();
+    paint.scaleX = 1.0f;
     paint.size = fontSize;
     layout->doLayout(utf16Text.data(),
                      0,
