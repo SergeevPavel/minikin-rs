@@ -88,14 +88,23 @@ fn main() {
     }
 
     {
-        cc::Build::new()
-            .cpp(true)
+        let mut cfg = cc::Build::new();
+        cfg.cpp(true)
             .flag("-std=c++11")
             .static_crt(static_crt)
-            .define("HAVE_ICU", None)
-            .define("HAVE_ICU_BUILTIN", None)
-            .define("HAVE_OT", None)
-            .include(out_dir.join("include"))
+            .define("HAVE_ICU", "1")
+            .define("HAVE_ICU_BUILTIN", "1");
+            // .define("HAVE_OT", "1");
+
+        if !target.contains("windows") {
+            cfg.define("HAVE_PTHREAD", "1");
+        }
+
+        if target.contains("apple") {
+            cfg.define("HAVE_CORETEXT", "1");
+        }
+
+        cfg.include(out_dir.join("include"))
             .file("minikin/third-party/harfbuzz/src/harfbuzz.cc")
             .file("minikin/third-party/harfbuzz/src/hb-icu.cc")
             .compile("harfbuzz");

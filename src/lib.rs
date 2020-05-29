@@ -1,3 +1,7 @@
+extern crate core_graphics;
+extern crate core_text;
+extern crate foreign_types;
+
 use libc::{c_int, c_void};
 
 #[repr(C)]
@@ -76,7 +80,7 @@ mod tests {
         let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
         let mut font_file1 = File::open(root.join("fonts/Roboto-Regular.ttf")).unwrap();
         let mut font_buffer1 = Vec::new();
-        let mut font_file2 = File::open(root.join("fonts/OpenSansEmoji.ttf")).unwrap();
+        let mut font_file2 = File::open("/System/Library/Fonts/Apple Color Emoji.ttc").unwrap();
         let mut font_buffer2 = Vec::new();
         font_file1.read_to_end(&mut font_buffer1).unwrap();
         font_file2.read_to_end(&mut font_buffer2).unwrap();
@@ -100,7 +104,7 @@ mod tests {
             let fonts = vec![font1, font2];
             let font_collection = create_font_collection(fonts.as_ptr(), fonts.len() as u32);
 
-            let text = "Hello 😀 😀 😀 world Хеллоу ворлд";
+            let text = "😀x";
             let text_bytes = text.as_bytes();
             let layout = layout_text(text_bytes.as_ptr(),
                                      text_bytes.len() as u32,
