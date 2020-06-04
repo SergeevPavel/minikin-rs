@@ -5,10 +5,13 @@
 
 using namespace minikin;
 
+static uint32_t nextId = 0;
+
 class ProxyMinikinFont : public MinikinFont {
 public:
-    ProxyMinikinFont(uint32_t fontId, const uint8_t* bytes, uint32_t size, std::vector<FontVariation> variations, measure_glyph_t measureGlyph, void* measureGlyphArg)
-    : MinikinFont(fontId)
+    ProxyMinikinFont(int64_t fontId, const uint8_t* bytes, uint32_t size, std::vector<FontVariation> variations, measure_glyph_t measureGlyph, void* measureGlyphArg)
+    : MinikinFont(nextId++)
+    , mFontId(fontId)
     , mFontIndex(0)
     , mMeasureGlyph(measureGlyph)
     , mMeasureGlyphArg(measureGlyphArg)
@@ -45,11 +48,19 @@ public:
         return mVariations;
     }
 
+    int64_t fontId() const {
+
+    }
+
 private:
     ProxyMinikinFont() = delete;
     ProxyMinikinFont(const ProxyMinikinFont&) = delete;
     ProxyMinikinFont& operator=(ProxyMinikinFont&) = delete;
 
+    // different fonts can share same fontId
+    // e.g. when we load several font instances with different font variations
+    // it will use same fontId correspond to WR font id
+    const int64_t mFontId;
     const std::vector<FontVariation> mVariations;
     const int mFontIndex;
     hb_blob_t* mHbBlob;
@@ -131,8 +142,8 @@ size_t glyphs_count(const Layout* layout) {
     return layout->nGlyphs();
 }
 
-uint32_t get_font_id(const Layout* layout, size_t i) {
-    return layout->getFont(i)->GetUniqueId();
+int64_t get_font_id(const Layout* layout, size_t i) {
+    return dynamic_cast<const ProxyMinikinFont*>(layout->getFont(i))->fontId();
 }
 
 uint32_t get_glyph_id(const Layout* layout, size_t i) {
