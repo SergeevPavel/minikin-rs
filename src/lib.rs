@@ -49,7 +49,7 @@ extern {
     pub fn get_bounds(layout: LayoutToken) -> MinikinRect;
     pub fn get_advance(layout: LayoutToken) -> f32;
     pub fn glyphs_count(layout: LayoutToken) -> usize;
-    pub fn get_font_id(layout: LayoutToken, i: usize) -> i32;
+    pub fn get_font_id(layout: LayoutToken, i: usize) -> i64;
     pub fn get_glyph_id(layout: LayoutToken, i: usize) -> u32;
     pub fn get_x(layout: LayoutToken, i: usize) -> f32;
     pub fn get_y(layout: LayoutToken, i: usize) -> f32;
