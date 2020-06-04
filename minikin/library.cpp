@@ -49,7 +49,7 @@ public:
     }
 
     int64_t fontId() const {
-
+        return mFontId;
     }
 
 private:
