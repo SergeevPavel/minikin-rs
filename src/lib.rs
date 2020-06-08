@@ -1,8 +1,9 @@
-extern crate core_graphics;
-extern crate core_text;
-extern crate foreign_types;
+// this libs are used by harfbuzz, without explicit import cargo will not link with them as they aren't used by rust code
+#[cfg(target_os="macos")] extern crate core_text;
+#[cfg(target_os="macos")] extern crate core_graphics;
+#[cfg(target_os="macos")] extern crate foreign_types;
 
-use libc::{c_int, c_void};
+use libc::c_void;
 
 #[repr(C)]
 #[derive(Debug)]
