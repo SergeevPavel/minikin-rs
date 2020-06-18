@@ -46,7 +46,7 @@ SHELLOPTS="braceexpand:hashall:interactive-comments:igncr"
 
 all:
 	cd "$(ICU_BUILD_DIR)" \
-	    && bash "$(SRC_DIR)/minikin/third-party/icu/icu4c/source/configure" $(ICU_CONFIGURE_FLAGS) CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" \
+	    && /bin/bash "$(SRC_DIR)/minikin/third-party/icu/icu4c/source/configure" $(ICU_CONFIGURE_FLAGS) CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" \
 	    && make -j$(NUM_JOBS) all \
 	    && make install
 
