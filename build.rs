@@ -66,6 +66,7 @@ fn main() {
             env.insert(String::from("CXXFLAGS"), String::from(msvc_rt_flag));
         }
 
+        println!("cargo:warning=Run make with env: {:?}", env);
         assert!(Command::new("make")
             .args(&["-f", "makefile.cargo", "-j", &env::var("NUM_JOBS").unwrap()])
             .envs(env)
