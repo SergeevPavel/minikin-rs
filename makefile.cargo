@@ -42,6 +42,7 @@ ICU_BUILD_DIR := $(shell mktemp -d "$(OUT_DIR)/icu_build.XXXXX")
 
 # ICU uses the $TARGET environment variable to mean something else
 TARGET=
+SHELLOPTS="braceexpand:hashall:interactive-comments:igncr"
 
 all:
 	cd "$(ICU_BUILD_DIR)" \
