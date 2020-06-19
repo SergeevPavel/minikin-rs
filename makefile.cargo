@@ -42,11 +42,11 @@ ICU_BUILD_DIR := $(shell mktemp -d "$(OUT_DIR)/icu_build.XXXXX")
 
 # ICU uses the $TARGET environment variable to mean something else
 TARGET=
-SHELLOPTS="braceexpand:hashall:interactive-comments:igncr"
 
 all:
 	cd "$(ICU_BUILD_DIR)" \
-	    && /bin/bash "$(SRC_DIR)/minikin/third-party/icu/icu4c/source/configure" $(ICU_CONFIGURE_FLAGS) CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" \
+        && set +euxo pipefail \
+	    && /bin/bash "$(SRC_DIR)/minikin/third-party/icu/icu4c/source/configure" $(ICU_CONFIGURE_FLAGS) CC=$(CC) CXX=$(CXX) CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" \
 	    && make -j$(NUM_JOBS) all \
 	    && make install
 

@@ -62,6 +62,8 @@ fn main() {
                 (false, true) => "-MDd",
                 (false, false) => "-MD"
             };
+            env.insert(String::from("CC"), String::from("cl.exe"));
+            env.insert(String::from("CXX"), String::from("cl.exe"));
             env.insert(String::from("CFLAGS"), String::from(msvc_rt_flag));
             env.insert(String::from("CXXFLAGS"), String::from(msvc_rt_flag));
         }
