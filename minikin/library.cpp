@@ -107,12 +107,21 @@ Layout* layout_text(const uint8_t* text,
                     uint32_t textLength,
                     bool isRtl,
                     float_t fontSize,
+                    float_t letterSpacing,
+                    float_t wordSpacing,
+                    const uint8_t* fontFeatureSettings,
+                    uint32_t fontFeatureSettingsLength,
                     std::shared_ptr<FontCollection>* fontCollection) {
     auto layout = new Layout();
     auto utf16Text = utf8ToUtf16(std::string((char*)text, textLength));
     auto paint = MinikinPaint();
     paint.scaleX = 1.0f;
     paint.size = fontSize;
+    paint.letterSpacing = letterSpacing;
+    paint.wordSpacing = wordSpacing;
+    if (fontFeatureSettings != nullptr) {
+        paint.fontFeatureSettings = std::string((char*)fontFeatureSettings, fontFeatureSettingsLength);
+    }
     layout->doLayout(utf16Text.data(),
                      0,
                      utf16Text.size(),

@@ -45,7 +45,15 @@ extern {
     pub fn create_font_collection(fonts: *const MinikinFontToken, count: u32) -> FontCollectionToken;
     pub fn destroy_font_collection(font_collection: FontCollectionToken);
 
-    pub fn layout_text(text: *const u8, text_length: u32, is_rtl: bool, font_size: f32, font_collection: FontCollectionToken) -> LayoutToken;
+    pub fn layout_text(text: *const u8,
+                       text_length: u32,
+                       is_rtl: bool,
+                       font_size: f32,
+                       letter_spacing: f32,
+                       word_spacing: f32,
+                       font_feature_settings: *const u8,
+                       font_feature_settings_length: u32,
+                       font_collection: FontCollectionToken) -> LayoutToken;
     pub fn destroy_layout(layout: LayoutToken);
     pub fn get_bounds(layout: LayoutToken) -> MinikinRect;
     pub fn get_advance(layout: LayoutToken) -> f32;
@@ -64,6 +72,7 @@ mod tests {
     use std::io::prelude::*;
     use std::fs::File;
     use std::path::PathBuf;
+    use std::ffi::CString;
 
 
     extern "C" fn measure_glyph(font_size: f32, glyph_id: u32, arg: *mut c_void) -> GlyphDimensions {
@@ -111,6 +120,10 @@ mod tests {
                                      text_bytes.len() as u32,
                                      false,
                                      20.0,
+                                     0.0,
+                                     0.0,
+                                     0 as *const u8,
+                                     0,
                                      font_collection);
 
             println!("Bounds: {:?}", get_bounds(layout));

@@ -46,6 +46,10 @@ extern "C" Layout* layout_text(
         uint32_t textLength,
         bool isRtl,
         float_t fontSize,
+        float_t letterSpacing,
+        float_t wordSpacing,
+        const uint8_t* fontFeatureSettings, // comma separated font features
+        uint32_t fontFeatureSettingsLength,
         std::shared_ptr<FontCollection>* fontCollection);
 
 extern "C" void destroy_layout(Layout* layout);
