@@ -1,6 +1,7 @@
 #ifndef MINIKIN_LIBRARY_H
 #define MINIKIN_LIBRARY_H
 
+#include <cmath>
 #include <cstdint>
 
 #include <minikin/MinikinFont.h>
