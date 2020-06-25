@@ -19,7 +19,7 @@
 #define LOG_TAG "Minikin"
 
 #include <algorithm>
-#include <limits>
+#include <climits>
 
 #include <log/log.h>
 
