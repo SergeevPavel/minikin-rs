@@ -1,4 +1,6 @@
-SHELL := /bin/bash
+ifneq ($(OS), Windows_NT)
+  SHELL := /bin/bash
+endif
 
 ifneq ($(HOST),$(TARGET))
   CXX ?= $(TARGET)-g++
