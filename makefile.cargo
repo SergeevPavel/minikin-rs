@@ -1,5 +1,6 @@
 ifneq ($(OS), Windows_NT)
   SHELL := /bin/bash
+  FLAGS += -fPIC
 endif
 
 ifneq ($(HOST),$(TARGET))
